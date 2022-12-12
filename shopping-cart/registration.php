@@ -1,29 +1,5 @@
 <?php
-require_once('open_connection.php');
-if(isset($_POST['submit'])){
-	$name = $_POST['name'];
-	$username = $_POST['username'];
-	$password = $_POST['password'];
-	$confirmPassword = $_POST['confirmPassword'];
-	$duplicate = mysqli_query($con, "SELECT * FROM tbl_user WHERE username = '$username'");
-	if(mysqli_num_rows($duplicate)) > 0{
-		echo
-		"<script> alert('Username Has Already Taken') </script>"
-	}
-	else{
-		if($password == $confirmPassword){
-			$query = "INSERT INTO tbl_user VALUES('', '$name', '$username', '$password')";
-			mysqli_query($con, $query);
-			echo
-			"<script> alert('Registration Successful!'); </script>";
-		}
-		else{
-			echo
-			"<script> alert('Password Does Not Match!'); </script>";
-		}
-	}
-}
-
+require_once ('config.php');
 ?>
 <!DOCTYPE html>
 <html>
@@ -31,21 +7,78 @@ if(isset($_POST['submit'])){
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Registration</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+  	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
 </head>
 <body>
-	<h2>Registration Form</h2>
-	<form class="" action="" method="" autocomplete="off">
-		<label for="name">Name : </label>
-		<input type="text" name="name" id="name" required value=""> <br>
 
-		<label for="username">Username : </label>
-		<input type="text" name="username" id="username" required value=""> <br>
+<div>
+	<?php
+	
+	?>
+</div>
+<div>
+	<form action="registration.php" method="post">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-3 center">
+					<h2>Registration Form | PHP</h2>
+					<p>Please fill up the form</p>
+					<hr class="mb-3">
+					<label for="name"><b>Name</b></label>
+					<input class="form-control" id="name" type="text" name="name" required>
 
-		<label for="password">Password : </label>
-		<input type="password" name="password" id="password" required value=""> <br>
-		<button type="submit" name="submit">Register</button>
+					<label for="username"><b>Username</b></label>
+					<input class="form-control" id="username" type="text" name="username" required>
+			
+					<label for="password"><b>Password</b></label>
+					<input class="form-control" id="password" type="password" name="password" required><br>
+					<hr class="mb-3">
+					<input class="btn btn-secondary" type="submit" id="register" name="create" value="Sign Up">
+					<a href="login.php" class="btn btn-secondary">Go Back</a>
+				</div>
+			</div>
+		</div>
 	</form>
-	<br>
-	<a href="login.php">Login</a>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="text/javascript">
+	$(function(){
+		$('#register').click(function(){
+
+			var valid = this.form.checkValidity();
+			if(valid){
+
+			var name 		= $().val('#name');
+			var username 	= $().val('#username');
+			var password 	= $().val('#password');
+
+				e.preventDefault();
+				$.ajax({
+					type: 'POST',
+					url: 'process.php',
+					data: {name: name, username:username, password:password}
+					success: function(data){
+							Swal.fire({
+							'title': 'Successful',
+							'text': data,
+							'type': 'success'
+						})
+					},
+					error: function(data){
+							Swal.fire({
+								'title': 'Errors',
+								'text': 'Failed Registered!',
+								'type': 'error'
+						})
+					}
+				});
+			}else{
+				
+			}
+		});
+	});
+</script>
 </body>
 </html>
